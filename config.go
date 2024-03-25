@@ -144,6 +144,10 @@ func SanitiyCheck(conf *Config) error {
 		return fmt.Errorf("at least 1 image must be specified")
 	}
 
+	if len(conf.Image) > 4 {
+		return fmt.Errorf("only 4 images can be specified")
+	}
+
 	if conf.Shader == "" {
 		return fmt.Errorf("shader file must be specified")
 	}

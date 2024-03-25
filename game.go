@@ -141,9 +141,7 @@ func (game *Game) Draw(screen *ebiten.Image) {
 		"Mouse":  []float64{float64(mousex), float64(mousey)},
 	}
 
-	for idx, image := range game.Images {
-		op.Images[idx] = image
-	}
+	copy(op.Images[:3], game.Images)
 
 	op.GeoM.Translate(float64(game.Conf.X), float64(game.Conf.Y))
 
