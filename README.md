@@ -1,5 +1,7 @@
 # kage-viewer - Viewer for shaders written in Kage, similar to glslviewer
 
+![Logo](https://github.com/TLINDEN/kageviewer/blob/main/.github/assets/logo.png)
+
 [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/tlinden/kage-viewer/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tlinden/kage-viewer)](https://goreportcard.com/report/github.com/tlinden/kage-viewer) 
 
