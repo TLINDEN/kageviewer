@@ -13,6 +13,10 @@ reloads changed assets, which allows you to develop your shader and
 see live, how it responds to your changes. If loading fails, an error
 will be printed to STDOUT. The same applies for images.
 
+## Screenshot
+
+![Screenshot](https://github.com/TLINDEN/kageviewer/blob/main/.github/assets/screenshot.png)
+
 ## Installation
 
 The tool does not have any dependencies.  Just download the binary for
