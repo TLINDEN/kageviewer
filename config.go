@@ -32,7 +32,7 @@ import (
 )
 
 const (
-	VERSION string = "0.0.3"
+	VERSION string = "0.0.4"
 	Usage   string = `This is kage-viewer, a shader viewer.
 
 Usage: kage-viewer [-vd] [-c <config file>] [-g geom] [-p geom] \
@@ -44,6 +44,8 @@ Options:
 -s --shader     <kage file>     Shader to run
 -g --geometry   <WIDTHxHEIGHT>  Window size
 -p --position   <XxY>           Position of image0
+-b --background <png file>      Image to load as background
+-t --tps        <ticks/s>       At how many ticks per second to run
    --map-flag   <name>          Map Flag uniform to <name>
    --map-ticks  <name>          Map Flag uniform to <name>
    --map-slider <name>          Map Flag uniform to <name>
@@ -54,13 +56,15 @@ Options:
 )
 
 type Config struct {
-	Showversion bool     `koanf:"version"`  // -v
-	Debug       bool     `koanf:"debug"`    // -d
-	Config      string   `koanf:"config"`   // -c
-	Image       []string `koanf:"image"`    // -i
-	Shader      string   `koanf:"shader"`   // -s
-	Geo         string   `koanf:"geometry"` // -g
-	Posision    string   `koanf:"position"` // -p
+	Showversion bool     `koanf:"version"`    // -v
+	Debug       bool     `koanf:"debug"`      // -d
+	Config      string   `koanf:"config"`     // -c
+	Image       []string `koanf:"image"`      // -i
+	Shader      string   `koanf:"shader"`     // -s
+	Background  string   `koanf:"background"` // -b
+	TPS         int      `koanf:"tps"`        // -t
+	Geo         string   `koanf:"geometry"`   // -g
+	Posision    string   `koanf:"position"`   // -p
 	Flag        string   `koanf:"map-flag"`
 	Ticks       string   `koanf:"map-ticks"`
 	Mouse       string   `koanf:"map-mouse"`
@@ -91,6 +95,8 @@ func InitConfig() (*Config, error) {
 	flagset.StringP("map-ticks", "", "Ticks", "map ticks uniform")
 	flagset.StringP("map-mouse", "", "Mouse", "map mouse uniform")
 	flagset.StringP("map-slider", "", "Slider", "map slider uniform")
+	flagset.StringP("background", "b", "", "background image")
+	flagset.IntP("tps", "t", 60, "ticks per second")
 
 	if err := flagset.Parse(os.Args[1:]); err != nil {
 		return nil, fmt.Errorf("failed to parse program arguments: %w", err)

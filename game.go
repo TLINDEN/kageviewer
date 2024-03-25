@@ -30,13 +30,14 @@ import (
 )
 
 type Game struct {
-	Conf   *Config
-	Images []*asset.LiveAsset[*ebiten.Image]
-	Shader *asset.LiveAsset[*ebiten.Shader]
-	Cursor []float64
-	Ticks  int
-	Slider float64
-	Flag   int
+	Conf       *Config
+	Images     []*asset.LiveAsset[*ebiten.Image]
+	Shader     *asset.LiveAsset[*ebiten.Shader]
+	Cursor     []float64
+	Ticks      int
+	Slider     float64
+	Flag       int
+	Background *asset.LiveAsset[*ebiten.Image]
 }
 
 func LoadImage(name string) (*ebiten.Image, error) {
@@ -71,7 +72,20 @@ func (game *Game) Init() error {
 		return fmt.Errorf("failed to load shader %s: %s", game.Conf.Shader, err)
 	}
 
+	if game.Conf.Background != "" {
+		slog.Debug("Loading background", "image", game.Conf.Background)
+
+		img, err := asset.NewLiveAsset[*ebiten.Image](game.Conf.Background)
+		if err != nil {
+			return fmt.Errorf("failed to load image %s: %s", game.Conf.Background, err)
+		}
+
+		game.Background = img
+	}
+
 	game.Shader = shader
+
+	ebiten.SetMaxTPS(game.Conf.TPS)
 
 	return nil
 }
@@ -128,6 +142,12 @@ func (game *Game) Update() error {
 		fmt.Println("warn: shader reloading error:", game.Shader.Error())
 	}
 
+	if game.Background != nil {
+		if game.Background.Error() != nil {
+			fmt.Println("warn: background image reloading error:", game.Background.Error())
+		}
+	}
+
 	if game.CheckInput() {
 		slog.Debug("Key pressed",
 			game.Conf.Flag, game.Flag,
@@ -146,6 +166,11 @@ func (game *Game) Update() error {
 }
 
 func (game *Game) Draw(screen *ebiten.Image) {
+	if game.Background != nil {
+		op := &ebiten.DrawImageOptions{}
+		screen.DrawImage(game.Background.Value(), op)
+	}
+
 	op := &ebiten.DrawRectShaderOptions{}
 
 	op.Uniforms = map[string]any{

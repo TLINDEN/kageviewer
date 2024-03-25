@@ -78,6 +78,8 @@ Options:
 -s --shader     <kage file>     Shader to run
 -g --geometry   <WIDTHxHEIGHT>  Window size
 -p --position   <XxY>           Position of image0
+-b --background <png file>      Image to load as background
+-t --tps        <ticks/s>       At how many ticks per second to run
    --map-flag   <name>          Map Flag uniform to <name>
    --map-ticks  <name>          Map Flag uniform to <name>
    --map-slider <name>          Map Flag uniform to <name>
