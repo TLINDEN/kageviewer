@@ -29,6 +29,10 @@ netbsd/arm64
 openbsd/arm64
 windows/arm64"
 
+DIST="linux/amd64
+windows/amd64
+windows/arm64"
+
 tool="$1"
 version="$2"
 
@@ -54,7 +58,7 @@ for D in $DIST; do
     tarfile="releases/${tool}-${os}-${arch}-${version}.tar.gz"
     set -x
     #GOOS=${os} GOARCH=${arch} go build -tags osusergo,netgo -ldflags "-extldflags=-static" -o ${binfile}
-    GOOS=${os} GOARCH=${arch} go build -tags -o ${binfile}
+    GOOS=${os} GOARCH=${arch} go build -o ${binfile}
     mkdir -p ${tardir}
     cp ${binfile} README.md LICENSE ${tardir}/
     echo 'tool = kage-viewer
