@@ -135,10 +135,10 @@ func (game *Game) Draw(screen *ebiten.Image) {
 	mousex, mousey := ebiten.CursorPosition()
 
 	op.Uniforms = map[string]any{
-		"Flag":   game.Flag,
-		"Slider": game.Slider,
-		"Ticks":  game.Ticks,
-		"Mouse":  []float64{float64(mousex), float64(mousey)},
+		game.Conf.Flag:   game.Flag,
+		game.Conf.Slider: game.Slider,
+		game.Conf.Ticks:  float64(game.Ticks) / 60,
+		game.Conf.Mouse:  []float64{float64(mousex), float64(mousey)},
 	}
 
 	copy(op.Images[:3], game.Images)

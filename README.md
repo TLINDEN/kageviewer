@@ -61,13 +61,17 @@ Usage: kage-viewer [-vd] [-c <config file>] [-g geom] [-p geom] \
        -i <image0.png> -i <image1.png> -s <shader.kage>
 
 Options:
--c --config   <toml file>     Config file to use (optional)
--i --image    <png file>      Image to load (multiple times allowed, up to 4)
--s --shader   <kage file>     Shader to run
--g --geometry <WIDTHxHEIGHT>  Window size
--p --position <XxY>           Position of image0
--d --debug    Show debugging output
--v --version  Show program version
+-c --config     <toml file>     Config file to use (optional)
+-i --image      <png file>      Image to load (multiple times allowed, up to 4)
+-s --shader     <kage file>     Shader to run
+-g --geometry   <WIDTHxHEIGHT>  Window size
+-p --position   <XxY>           Position of image0
+   --map-flag   <name>          Map Flag uniform to <name>
+   --map-ticks  <name>          Map Flag uniform to <name>
+   --map-slider <name>          Map Flag uniform to <name>
+   --map-mouse  <name>          Map Flag uniform to <name>
+-d --debug                      Show debugging output
+-v --version                    Show program version
 ```
 
 Example usage using the provided example:
@@ -90,8 +94,18 @@ Uniforms supported so far:
   `SPACE` or pusing the left mouse button
 - `var Slider float`: a normalized float value, you can increment it
   with `UP` or `DOWN`
-- `var Ticks int`: the time the game runs (ticks, not seconds!)
+- `var Ticks float`: the time the game runs (ticks, not seconds!)
 - `var Mouse vec2`: the current mouse position
+
+If you want to test an existing shader and don't want to rename the
+uniforms, you can map the ones provided by **kage-viewer** to custom
+names using the `--map-*` options. For example:
+
+```shell
+kage-viewer -g 640x480 --map-ticks Time --map-mouse Cursor examples/shader/default.go
+```
+
+This executes the example shader in the ebitenging source repository.
 
 # Config File
 

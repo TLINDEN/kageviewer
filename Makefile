@@ -40,6 +40,12 @@ install: buildlocal
 clean:
 	rm -rf $(tool) coverage.out testdata t/out
 
+shader-destruct: buildlocal
+	./$(tool) -g 32x32 -i example/wall.png -i example/damage.png --map-ticks Time -s example/destruct.kage
+
+shader-ebiten: buildlocal
+	./$(tool) -g 640x480 --map-ticks Time --map-mouse Cursor -s example/ebiten.kage
+
 test: clean
 	mkdir -p t/out
 	go test ./... $(ARGS)

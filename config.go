@@ -32,20 +32,24 @@ import (
 )
 
 const (
-	VERSION string = "0.0.1"
+	VERSION string = "0.0.2"
 	Usage   string = `This is kage-viewer, a shader viewer.
 
 Usage: kage-viewer [-vd] [-c <config file>] [-g geom] [-p geom] \
        -i <image0.png> -i <image1.png> -s <shader.kage>
 
 Options:
--c --config   <toml file>     Config file to use (optional)
--i --image    <png file>      Image to load (multiple times allowed, up to 4)
--s --shader   <kage file>     Shader to run
--g --geometry <WIDTHxHEIGHT>  Window size
--p --position <XxY>           Position of image0
--d --debug    Show debugging output
--v --version  Show program version
+-c --config     <toml file>     Config file to use (optional)
+-i --image      <png file>      Image to load (multiple times allowed, up to 4)
+-s --shader     <kage file>     Shader to run
+-g --geometry   <WIDTHxHEIGHT>  Window size
+-p --position   <XxY>           Position of image0
+   --map-flag   <name>          Map Flag uniform to <name>
+   --map-ticks  <name>          Map Flag uniform to <name>
+   --map-slider <name>          Map Flag uniform to <name>
+   --map-mouse  <name>          Map Flag uniform to <name>
+-d --debug                      Show debugging output
+-v --version                    Show program version
 `
 )
 
@@ -57,20 +61,16 @@ type Config struct {
 	Shader      string   `koanf:"shader"`   // -s
 	Geo         string   `koanf:"geometry"` // -g
 	Posision    string   `koanf:"position"` // -p
+	Flag        string   `koanf:"map-flag"`
+	Ticks       string   `koanf:"map-ticks"`
+	Mouse       string   `koanf:"map-mouse"`
+	Slider      string   `koanf:"map-slider"`
 
 	X, Y, Width, Height int // feed from -g + -p
 }
 
 func InitConfig() (*Config, error) {
 	var kloader = koanf.New(".")
-
-	// Load default values using the confmap provider.
-	/* not needed yet
-	   if err := kloader.Load(confmap.Provider(map[string]interface{}{
-	   }, "."), nil); err != nil {
-	           return nil, fmt.Errorf("failed to load default values into koanf: %w", err)
-	   }
-	*/
 
 	// setup custom usage
 	flagset := flag.NewFlagSet("config", flag.ContinueOnError)
@@ -87,6 +87,10 @@ func InitConfig() (*Config, error) {
 	flagset.StringP("position", "p", "0x0", "position of shader")
 	flagset.StringArrayP("image", "i", nil, "image file")
 	flagset.StringP("shader", "s", "", "shader file")
+	flagset.StringP("map-flag", "", "Flag", "map flag uniform")
+	flagset.StringP("map-ticks", "", "Ticks", "map ticks uniform")
+	flagset.StringP("map-mouse", "", "Mouse", "map mouse uniform")
+	flagset.StringP("map-slider", "", "Slider", "map slider uniform")
 
 	if err := flagset.Parse(os.Args[1:]); err != nil {
 		return nil, fmt.Errorf("failed to parse program arguments: %w", err)
@@ -140,10 +144,6 @@ func InitConfig() (*Config, error) {
 }
 
 func SanitiyCheck(conf *Config) error {
-	if len(conf.Image) < 1 {
-		return fmt.Errorf("at least 1 image must be specified")
-	}
-
 	if len(conf.Image) > 4 {
 		return fmt.Errorf("only 4 images can be specified")
 	}

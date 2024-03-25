@@ -18,20 +18,16 @@
 
 package main
 
-var Flag int
-var Slider float
-var Time int
-var Mouse vec2
+var Time float
+var Cursor vec2
 
-func Fragment(_ vec4, texCoord vec2, _ vec4) vec4 {
-	wallpx := imageSrc0At(texCoord) // A pixel from the wall tile
-	mask := imageSrc1At(texCoord)   // A pixel from the damage mask image
-
-	if Flag == 1 && (wallpx.a != 0.0 && mask.a != 0.0) {
-		alpha := clamp(Slider+(1.0-mask.a), 0.0, 1.0)
-		// Create a darker pixel if it's inside a damage mask.
-		return vec4(wallpx.r*alpha, wallpx.g*alpha, wallpx.b*alpha, wallpx.a)
-	}
-
-	return wallpx // Otherwise, leave a pixel color as is
+func Fragment(dstPos vec4, srcPos vec2, color vec4) vec4 {
+	pos := (dstPos.xy - imageDstOrigin()) / imageDstSize()
+	pos += Cursor / imageDstSize() / 4
+	clr := 0.0
+	clr += sin(pos.x*cos(Time/15)*80) + cos(pos.y*cos(Time/15)*10)
+	clr += sin(pos.y*sin(Time/10)*40) + cos(pos.x*sin(Time/25)*40)
+	clr += sin(pos.x*sin(Time/5)*10) + sin(pos.y*sin(Time/35)*80)
+	clr *= sin(Time/10) * 0.5
+	return vec4(clr, clr*0.5, sin(clr+Time/3)*0.75, 1)
 }
