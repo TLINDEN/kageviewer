@@ -3,9 +3,10 @@ module github.com/TLINDEN/kage-viewer
 go 1.22
 
 require (
+	github.com/Zyko0/Ebiary/asset v0.0.0-20240304185439-be56fe8a2a6a // indirect
 	github.com/ebitengine/purego v0.6.0 // indirect
 	github.com/fatih/color v1.16.0 // indirect
-	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-viper/mapstructure/v2 v2.0.0-alpha.1 // indirect
 	github.com/hajimehoshi/ebiten/v2 v2.6.7 // indirect
 	github.com/jezek/xgb v1.1.0 // indirect

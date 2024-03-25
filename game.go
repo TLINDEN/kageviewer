@@ -24,14 +24,16 @@ import (
 	"log/slog"
 	"os"
 
+	"github.com/Zyko0/Ebiary/asset"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
 )
 
 type Game struct {
 	Conf   *Config
-	Images []*ebiten.Image
-	Shader *ebiten.Shader
+	Images []*asset.LiveAsset[*ebiten.Image]
+	Shader *asset.LiveAsset[*ebiten.Shader]
+	Cursor []float64
 	Ticks  int
 	Slider float64
 	Flag   int
@@ -55,22 +57,18 @@ func LoadImage(name string) (*ebiten.Image, error) {
 func (game *Game) Init() error {
 	for _, image := range game.Conf.Image {
 		slog.Debug("Loading images", "image", image)
-		img, err := LoadImage(image)
+		//img, err := LoadImage(image)
+		img, err := asset.NewLiveAsset[*ebiten.Image](image)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to load image %s: %s", image, err)
 		}
 
 		game.Images = append(game.Images, img)
 	}
 
-	data, err := os.ReadFile(game.Conf.Shader)
+	shader, err := asset.NewLiveAsset[*ebiten.Shader](game.Conf.Shader)
 	if err != nil {
 		return fmt.Errorf("failed to load shader %s: %s", game.Conf.Shader, err)
-	}
-
-	shader, err := ebiten.NewShader(data)
-	if err != nil {
-		return fmt.Errorf("failed to create new shader %s: %s", game.Conf.Shader, err)
 	}
 
 	game.Shader = shader
@@ -120,9 +118,27 @@ func (g *Game) Down() {
 }
 
 func (game *Game) Update() error {
-	if game.CheckInput() {
-		slog.Debug("Key pressed", "Slider", game.Slider, "Flag", game.Flag)
+	for _, image := range game.Images {
+		if image.Error() != nil {
+			fmt.Println("warn: image reloading error:", image.Error())
+		}
 	}
+
+	if game.Shader.Error() != nil {
+		fmt.Println("warn: shader reloading error:", game.Shader.Error())
+	}
+
+	if game.CheckInput() {
+		slog.Debug("Key pressed",
+			game.Conf.Flag, game.Flag,
+			game.Conf.Slider, game.Slider,
+			game.Conf.Ticks, fmt.Sprintf("%.02f", float64(game.Ticks)/60),
+			game.Conf.Mouse, fmt.Sprintf("%.02f, %.02f", game.Cursor[0], game.Cursor[1]),
+		)
+	}
+
+	mousex, mousey := ebiten.CursorPosition()
+	game.Cursor = []float64{float64(mousex), float64(mousey)}
 
 	game.Ticks++
 
@@ -132,20 +148,20 @@ func (game *Game) Update() error {
 func (game *Game) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawRectShaderOptions{}
 
-	mousex, mousey := ebiten.CursorPosition()
-
 	op.Uniforms = map[string]any{
 		game.Conf.Flag:   game.Flag,
 		game.Conf.Slider: game.Slider,
 		game.Conf.Ticks:  float64(game.Ticks) / 60,
-		game.Conf.Mouse:  []float64{float64(mousex), float64(mousey)},
+		game.Conf.Mouse:  game.Cursor,
 	}
 
-	copy(op.Images[:3], game.Images)
+	for idx, image := range game.Images {
+		op.Images[idx] = image.Value()
+	}
 
 	op.GeoM.Translate(float64(game.Conf.X), float64(game.Conf.Y))
 
-	screen.DrawRectShader(game.Conf.Width, game.Conf.Height, game.Shader, op)
+	screen.DrawRectShader(game.Conf.Width, game.Conf.Height, game.Shader.Value(), op)
 }
 
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
