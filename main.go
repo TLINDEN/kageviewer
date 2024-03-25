@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime/debug"
 
 	"log/slog"
 
@@ -46,7 +45,6 @@ func main() {
 	if conf.Debug {
 		logLevel := &slog.LevelVar{}
 		// we're using a more verbose logger in debug mode
-		buildInfo, _ := debug.ReadBuildInfo()
 		opts := &yadu.Options{
 			Level:     logLevel,
 			AddSource: true,
@@ -55,12 +53,7 @@ func main() {
 		logLevel.Set(slog.LevelDebug)
 
 		handler := yadu.NewHandler(os.Stdout, opts)
-		debuglogger := slog.New(handler).With(
-			slog.Group("program_info",
-				slog.Int("pid", os.Getpid()),
-				slog.String("go_version", buildInfo.GoVersion),
-			),
-		)
+		debuglogger := slog.New(handler)
 		slog.SetDefault(debuglogger)
 	}
 

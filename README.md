@@ -3,7 +3,13 @@
 [![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/tlinden/kage-viewer/blob/master/LICENSE)
 [![Go Report Card](https://goreportcard.com/badge/github.com/tlinden/kage-viewer)](https://goreportcard.com/report/github.com/tlinden/kage-viewer) 
 
-This little tool can be used to test shaders written in [Kage](https://ebitengine.org/en/documents/shader.html), a shader meta language for [Ebitengine](https://github.com/hajimehoshi/ebiten).
+This   little  tool   can  be   used  to   test  shaders   written  in
+[Kage](https://ebitengine.org/en/documents/shader.html), a shader meta
+language for
+[Ebitengine](https://github.com/hajimehoshi/ebiten). kage-viewer
+reloads changed assets, which allows you to develop your shader and
+see live, how it responds to your changes. If loading fails, an error
+will be printed to STDOUT. The same applies for images.
 
 ## Installation
 
@@ -129,7 +135,7 @@ Possible parameters equal the long command line options.
 - [X] Implement loading of images and shader files
 - [X] Implement basic shader rendering and user input
 - [ ] Add custom uniforms (maybe using lua code?)
-- [ ] Provide a way to respond live to shader code changes (use lua as
+- [x] Provide a way to respond live to shader code changes (use lua as
   well?)
 
 # Report bugs
