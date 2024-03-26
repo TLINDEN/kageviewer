@@ -32,7 +32,7 @@ import (
 )
 
 const (
-	VERSION string = "0.0.5"
+	VERSION string = "0.0.6"
 	Usage   string = `This is kageviewer, a shader viewer.
 
 Usage: kageviewer [-vd] [-c <config file>] [-g geom] [-p geom] \
