@@ -72,11 +72,8 @@ cover-report:
 goupdate:
 	go get -t -u=patch ./...
 
-buildall:
-	./mkrel.sh $(tool) $(VERSION)
-
 release:
-	gh release create v$(VERSION) --generate-notes releases/*
+	gh release create v$(VERSION) --generate-notes
 
 show-versions: buildlocal
 	@echo "### kageviewer version:"

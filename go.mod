@@ -1,4 +1,4 @@
-module github.com/TLINDEN/kageviewer
+module github.com/tlinden/kageviewer
 
 go 1.22
 
