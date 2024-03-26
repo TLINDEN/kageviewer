@@ -61,7 +61,7 @@ for D in $DIST; do
     GOOS=${os} GOARCH=${arch} go build -o ${binfile}
     mkdir -p ${tardir}
     cp ${binfile} README.md LICENSE ${tardir}/
-    echo 'tool = kage-viewer
+    echo 'tool = kageviewer
 PREFIX = /usr/local
 UID    = root
 GID    = 0

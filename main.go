@@ -36,7 +36,7 @@ func main() {
 	}
 
 	if conf.Showversion {
-		fmt.Printf("This is kage-viewer version %s\n", VERSION)
+		fmt.Printf("This is kageviewer version %s\n", VERSION)
 		return
 	}
 

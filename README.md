@@ -1,14 +1,14 @@
-# kage-viewer - Viewer for shaders written in Kage, similar to glslviewer
+# kageviewer - Viewer for shaders written in Kage, similar to glslviewer
 
 ![Logo](https://github.com/TLINDEN/kageviewer/blob/main/.github/assets/logo.png)
 
-[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/tlinden/kage-viewer/blob/master/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tlinden/kage-viewer)](https://goreportcard.com/report/github.com/tlinden/kage-viewer) 
+[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/tlinden/kageviewer/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/tlinden/kageviewer)](https://goreportcard.com/report/github.com/tlinden/kageviewer) 
 
 This   little  tool   can  be   used  to   test  shaders   written  in
 [Kage](https://ebitengine.org/en/documents/shader.html), a shader meta
 language for
-[Ebitengine](https://github.com/hajimehoshi/ebiten). kage-viewer
+[Ebitengine](https://github.com/hajimehoshi/ebiten). kageviewer
 reloads changed assets, which allows you to develop your shader and
 see live, how it responds to your changes. If loading fails, an error
 will be printed to STDOUT. The same applies for images.
@@ -19,35 +19,13 @@ will be printed to STDOUT. The same applies for images.
 
 ## Installation
 
-The tool does not have any dependencies.  Just download the binary for
-your platform from the releases page and you're good to go.
+Since `kageviewer` is primarily aimed at golang game developers, no
+pre built binaries are provided.
 
-### Installation using a pre-compiled binary
-
-Go to the [latest release page](https://github.com/TLINDEN/kage-viewer/releases/latest)
-and look for your OS and platform. There are two options to install the binary:
-
-Directly     download     the     binary    for     your     platform,
-e.g. `kage-viewer-linux-amd64-0.0.2`, rename it to `kage-viewer` (or whatever
-you like more!)  and put it into  your bin dir (e.g. `$HOME/bin` or as
-root to `/usr/local/bin`).
-
-Be sure  to verify  the signature  of the binary  file. For  this also
-download the matching `kage-viewer-linux-amd64-0.0.2.sha256` file and:
+### Installation with go
 
 ```shell
-cat kage-viewer-linux-amd64-0.0.2.sha25 && sha256sum kage-viewer-linux-amd64-0.0.2
-```
-You should see the same SHA256 hash.
-
-You  may  also download  a  binary  tarball  for your  platform,  e.g.
-`kage-viewer-linux-amd64-0.0.2.tar.gz`,  unpack and  install it.  GNU Make  is
-required for this:
-   
-```shell
-tar xvfz kage-viewer-linux-amd64-0.0.2.tar.gz
-cd kage-viewer-linux-amd64-0.0.2
-sudo make install
+go install github.com/tlinden/kageviewer@latest
 ```
 
 ### Installation from source
@@ -66,10 +44,10 @@ install`.
 # Usage
 
 ```shell
-kage-viewer -h
-This is kage-viewer, a shader viewer.
+kageviewer -h
+This is kageviewer, a shader viewer.
 
-Usage: kage-viewer [-vd] [-c <config file>] [-g geom] [-p geom] \
+Usage: kageviewer [-vd] [-c <config file>] [-g geom] [-p geom] \
        -i <image0.png> -i <image1.png> -s <shader.kage>
 
 Options:
@@ -81,9 +59,10 @@ Options:
 -b --background <png file>      Image to load as background
 -t --tps        <ticks/s>       At how many ticks per second to run
    --map-flag   <name>          Map Flag uniform to <name>
-   --map-ticks  <name>          Map Flag uniform to <name>
-   --map-slider <name>          Map Flag uniform to <name>
-   --map-mouse  <name>          Map Flag uniform to <name>
+   --map-ticks  <name>          Map Ticks uniform to <name>
+   --map-time   <name>          Map Time uniform to <name>
+   --map-slider <name>          Map Slider uniform to <name>
+   --map-mouse  <name>          Map Mouse uniform to <name>
 -d --debug                      Show debugging output
 -v --version                    Show program version
 ```
@@ -91,7 +70,7 @@ Options:
 Example usage using the provided example:
 
 ```shell
-kage-viewer -g 32x32 -i example/wall.png -i example/damage.png  -s example/destruct.kg
+kageviewer -g 32x32 -i example/wall.png -i example/damage.png  -s example/destruct.kg
 ```
 
 Hit `SPACE` or press the left mouse button to toggle the damage
@@ -108,15 +87,16 @@ Uniforms supported so far:
   `SPACE` or pusing the left mouse button
 - `var Slider float`: a normalized float value, you can increment it
   with `UP` or `DOWN`
-- `var Ticks float`: the time the game runs (ticks, not seconds!)
+- `var Time float`: the time the game runs (ticks / TPS)
+- `var Ticks float`: the number of updates happened so far
 - `var Mouse vec2`: the current mouse position
 
 If you want to test an existing shader and don't want to rename the
-uniforms, you can map the ones provided by **kage-viewer** to custom
+uniforms, you can map the ones provided by **kageviewer** to custom
 names using the `--map-*` options. For example:
 
 ```shell
-kage-viewer -g 640x480 --map-ticks Time --map-mouse Cursor examples/shader/default.go
+kageviewer -g 640x480 --map-ticks Time --map-mouse Cursor examples/shader/default.go
 ```
 
 This executes the example shader in the ebitenging source repository.
@@ -126,10 +106,10 @@ This executes the example shader in the ebitenging source repository.
 You can use a config file to store your own codes, once you found one
 you like. A configfile is searched in these locations in this order:
 
-* `/etc/kage-viewer.conf`
-* `/usr/local/etc/kage-viewer.conf`
-* `$HOME/.config/kage-viewer/config`
-* `$HOME/.kage-viewer`
+* `/etc/kageviewer.conf`
+* `/usr/local/etc/kageviewer.conf`
+* `$HOME/.config/kageviewer/config`
+* `$HOME/.kageviewer`
 
 You may also specify a config file on the commandline using the `-c`
 flag.
@@ -148,7 +128,7 @@ Possible parameters equal the long command line options.
 
 # Report bugs
 
-[Please open an issue](https://github.com/TLINDEN/kage-viewer/issues). Thanks!
+[Please open an issue](https://github.com/TLINDEN/kageviewer/issues). Thanks!
 
 # License
 

@@ -30,14 +30,15 @@ import (
 )
 
 type Game struct {
-	Conf       *Config
-	Images     []*asset.LiveAsset[*ebiten.Image]
-	Shader     *asset.LiveAsset[*ebiten.Shader]
-	Cursor     []float64
-	Ticks      int
-	Slider     float64
-	Flag       int
-	Background *asset.LiveAsset[*ebiten.Image]
+	Conf         *Config
+	Images       []*asset.LiveAsset[*ebiten.Image]
+	Shader       *asset.LiveAsset[*ebiten.Shader]
+	ShaderBounds image.Rectangle
+	Cursor       []float64
+	Ticks        float64
+	Slider       float64
+	Flag         int
+	Background   *asset.LiveAsset[*ebiten.Image]
 }
 
 func LoadImage(name string) (*ebiten.Image, error) {
@@ -56,6 +57,7 @@ func LoadImage(name string) (*ebiten.Image, error) {
 }
 
 func (game *Game) Init() error {
+	// preload images
 	for _, image := range game.Conf.Image {
 		slog.Debug("Loading images", "image", image)
 		//img, err := LoadImage(image)
@@ -67,6 +69,7 @@ func (game *Game) Init() error {
 		game.Images = append(game.Images, img)
 	}
 
+	// preload shader
 	shader, err := asset.NewLiveAsset[*ebiten.Shader](game.Conf.Shader)
 	if err != nil {
 		return fmt.Errorf("failed to load shader %s: %s", game.Conf.Shader, err)
@@ -85,7 +88,30 @@ func (game *Game) Init() error {
 
 	game.Shader = shader
 
+	// user can customize TPS
 	ebiten.SetMaxTPS(game.Conf.TPS)
+
+	// setup shader bounds, by default we use window size
+	game.ShaderBounds = image.Rect(0, 0, game.Conf.Width, game.Conf.Height)
+
+	if len(game.Images) > 0 {
+		if game.Conf.Width < game.Images[0].Value().Bounds().Max.X {
+			// setup  geom. Shader might  be smaller  than window, we  use the
+			// first image -  if any - to determine its  size. We also enlarge
+			// the window if the first image is larger than the window.
+			game.Conf.Width = game.Images[0].Value().Bounds().Max.X
+			game.Conf.Height = game.Images[0].Value().Bounds().Max.Y
+		}
+
+		// adjust shader size by first image as well
+		game.ShaderBounds = game.Images[0].Value().Bounds()
+	} else {
+		// there might be no shader image but a background image, check it
+		if game.Background != nil {
+			game.Conf.Width = game.Background.Value().Bounds().Max.X
+			game.Conf.Height = game.Background.Value().Bounds().Max.Y
+		}
+	}
 
 	return nil
 }
@@ -176,8 +202,9 @@ func (game *Game) Draw(screen *ebiten.Image) {
 	op.Uniforms = map[string]any{
 		game.Conf.Flag:   game.Flag,
 		game.Conf.Slider: game.Slider,
-		game.Conf.Ticks:  float64(game.Ticks) / 60,
+		game.Conf.Time:   game.Ticks / float64(ebiten.TPS()),
 		game.Conf.Mouse:  game.Cursor,
+		game.Conf.Ticks:  game.Ticks,
 	}
 
 	for idx, image := range game.Images {
@@ -186,7 +213,11 @@ func (game *Game) Draw(screen *ebiten.Image) {
 
 	op.GeoM.Translate(float64(game.Conf.X), float64(game.Conf.Y))
 
-	screen.DrawRectShader(game.Conf.Width, game.Conf.Height, game.Shader.Value(), op)
+	screen.DrawRectShader(
+		game.ShaderBounds.Dx(),
+		game.ShaderBounds.Dy(),
+		game.Shader.Value(),
+		op)
 }
 
 func (game *Game) Layout(outsideWidth, outsideHeight int) (int, int) {

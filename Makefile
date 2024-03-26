@@ -16,7 +16,7 @@
 
 #
 # no need to modify anything below
-tool      = kage-viewer
+tool      = kageviewer
 VERSION   = $(shell grep VERSION config.go | head -1 | cut -d '"' -f2)
 archs     = darwin freebsd linux windows
 PREFIX    = /usr/local
@@ -44,7 +44,7 @@ shader-destruct: buildlocal
 	./$(tool) -g 32x32 -i example/wall.png -i example/damage.png --map-ticks Time -s example/destruct.kage
 
 shader-ebiten: buildlocal
-	./$(tool) -g 640x480 --map-ticks Time --map-mouse Cursor -s example/ebiten.kage
+	./$(tool) -g 640x480 --map-mouse Cursor -s example/ebiten.kage
 
 test: clean
 	mkdir -p t/out
@@ -75,12 +75,12 @@ goupdate:
 buildall:
 	./mkrel.sh $(tool) $(VERSION)
 
-release: buildall
+release:
 	gh release create v$(VERSION) --generate-notes releases/*
 
 show-versions: buildlocal
-	@echo "### kage-viewer version:"
-	@./kage-viewer -V
+	@echo "### kageviewer version:"
+	@./kageviewer -V
 
 	@echo
 	@echo "### go module versions:"

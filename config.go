@@ -32,10 +32,10 @@ import (
 )
 
 const (
-	VERSION string = "0.0.4"
-	Usage   string = `This is kage-viewer, a shader viewer.
+	VERSION string = "0.0.5"
+	Usage   string = `This is kageviewer, a shader viewer.
 
-Usage: kage-viewer [-vd] [-c <config file>] [-g geom] [-p geom] \
+Usage: kageviewer [-vd] [-c <config file>] [-g geom] [-p geom] \
        -i <image0.png> -i <image1.png> -s <shader.kage>
 
 Options:
@@ -47,9 +47,10 @@ Options:
 -b --background <png file>      Image to load as background
 -t --tps        <ticks/s>       At how many ticks per second to run
    --map-flag   <name>          Map Flag uniform to <name>
-   --map-ticks  <name>          Map Flag uniform to <name>
-   --map-slider <name>          Map Flag uniform to <name>
-   --map-mouse  <name>          Map Flag uniform to <name>
+   --map-ticks  <name>          Map Ticks uniform to <name>
+   --map-time   <name>          Map Time uniform to <name>
+   --map-slider <name>          Map Slider uniform to <name>
+   --map-mouse  <name>          Map Mouse uniform to <name>
 -d --debug                      Show debugging output
 -v --version                    Show program version
 `
@@ -69,6 +70,7 @@ type Config struct {
 	Ticks       string   `koanf:"map-ticks"`
 	Mouse       string   `koanf:"map-mouse"`
 	Slider      string   `koanf:"map-slider"`
+	Time        string   `koanf:"map-time"`
 
 	X, Y, Width, Height int // feed from -g + -p
 }
@@ -93,6 +95,7 @@ func InitConfig() (*Config, error) {
 	flagset.StringP("shader", "s", "", "shader file")
 	flagset.StringP("map-flag", "", "Flag", "map flag uniform")
 	flagset.StringP("map-ticks", "", "Ticks", "map ticks uniform")
+	flagset.StringP("map-time", "", "Time", "map time uniform")
 	flagset.StringP("map-mouse", "", "Mouse", "map mouse uniform")
 	flagset.StringP("map-slider", "", "Slider", "map slider uniform")
 	flagset.StringP("background", "b", "", "background image")
@@ -113,10 +116,10 @@ func InitConfig() (*Config, error) {
 		configfiles = []string{configfile}
 	} else {
 		configfiles = []string{
-			"/etc/kage-viewer.conf", "/usr/local/etc/kage-viewer.conf", // unix variants
-			filepath.Join(home, ".config", "kage-viewer", "config"),
-			filepath.Join(home, ".kage-viewer"),
-			"kage-viewer.conf",
+			"/etc/kageviewer.conf", "/usr/local/etc/kageviewer.conf", // unix variants
+			filepath.Join(home, ".config", "kageviewer", "config"),
+			filepath.Join(home, ".kageviewer"),
+			"kageviewer.conf",
 		}
 	}
 
