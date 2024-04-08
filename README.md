@@ -34,8 +34,8 @@ You will need the Golang toolchain  in order to build from source. GNU
 Make will also help but is not strictly neccessary.
 
 If you want to compile the tool yourself, use `git clone` to clone the
-repository.   Then   execute   `go    mod   tidy`   to   install   all
-dependencies. Then  just enter `go  build` or -  if you have  GNU Make
+repository.   Then   execute   `go mod tidy`   to   install   all
+dependencies. Then  just enter `go build` or -  if you have  GNU Make
 installed - `make`.
 
 To install after building either copy the binary or execute `sudo make
