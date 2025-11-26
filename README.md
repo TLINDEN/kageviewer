@@ -6,6 +6,9 @@
 [![Go Report Card](https://goreportcard.com/badge/codeberg.org/scip/kageviewer)](https://goreportcard.com/report/codeberg.org/scip/kageviewer) 
 [![status-badge](https://ci.codeberg.org/api/badges/15617/status.svg)](https://ci.codeberg.org/repos/15617)
 
+> [!CAUTION]
+> This software is now being maintained on [Codeberg](https://codeberg.org/scip/kageviewer/).
+
 This   little  tool   can  be   used  to   test  shaders   written  in
 [Kage](https://ebitengine.org/en/documents/shader.html), a shader meta
 language for
