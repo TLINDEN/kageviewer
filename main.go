@@ -64,7 +64,7 @@ func main() {
 
 	ebiten.SetWindowSize(game.Conf.Width, game.Conf.Height)
 	ebiten.SetWindowTitle("Kage shader viewer")
-	ebiten.SetWindowResizable(true)
+	ebiten.SetWindowResizingMode(ebiten.WindowResizingModeEnabled)
 
 	if err := ebiten.RunGame(game); err != nil {
 		log.Fatal(err)

@@ -1,9 +1,10 @@
 # kageviewer - Viewer for shaders written in Kage, similar to glslviewer
 
-![Logo](https://github.com/TLINDEN/kageviewer/blob/main/.github/assets/logo.png)
+![Logo](https://codeberg.org/scip/kageviewer/raw/branch/main/.github/assets/logo.png)
 
-[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://github.com/tlinden/kageviewer/blob/master/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/tlinden/kageviewer)](https://goreportcard.com/report/github.com/tlinden/kageviewer) 
+[![License](https://img.shields.io/badge/license-GPL-blue.svg)](https://codeberg.org/scip/kageviewer/raw/branch/main/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/codeberg.org/scip/kageviewer)](https://goreportcard.com/report/codeberg.org/scip/kageviewer) 
+[![status-badge](https://ci.codeberg.org/api/badges/15617/status.svg)](https://ci.codeberg.org/repos/15617)
 
 This   little  tool   can  be   used  to   test  shaders   written  in
 [Kage](https://ebitengine.org/en/documents/shader.html), a shader meta
@@ -15,7 +16,7 @@ will be printed to STDOUT. The same applies for images.
 
 ## Screenshot
 
-![Screenshot](https://github.com/TLINDEN/kageviewer/blob/main/.github/assets/screenshot.png)
+![Screenshot](https://codeberg.org/scip/kageviewer/raw/branch/main/.github/assets/screenshot.png)
 
 ## Installation
 
@@ -25,7 +26,7 @@ pre built binaries are provided.
 ### Installation with go
 
 ```shell
-go install github.com/tlinden/kageviewer@latest
+go install codeberg.org/scip/kageviewer@latest
 ```
 
 ### Installation from source
@@ -128,7 +129,7 @@ Possible parameters equal the long command line options.
 
 # Report bugs
 
-[Please open an issue](https://github.com/TLINDEN/kageviewer/issues). Thanks!
+[Please open an issue](https://codeberg.org/scip/kageviewer/issues). Thanks!
 
 # License
 

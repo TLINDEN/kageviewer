@@ -18,6 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -52,8 +53,7 @@ Options:
    --map-slider <name>          Map Slider uniform to <name>
    --map-mouse  <name>          Map Mouse uniform to <name>
 -d --debug                      Show debugging output
--v --version                    Show program version
-`
+-v --version                    Show program version`
 )
 
 type Config struct {
@@ -81,7 +81,7 @@ func InitConfig() (*Config, error) {
 	// setup custom usage
 	flagset := flag.NewFlagSet("config", flag.ContinueOnError)
 	flagset.Usage = func() {
-		fmt.Println(Usage)
+		_, _ = fmt.Println(Usage)
 		os.Exit(0)
 	}
 
@@ -165,13 +165,13 @@ func SanitiyCheck(conf *Config) error {
 
 	geo := strings.Split(conf.Geo, "x")
 	if len(geo) != 2 {
-		return fmt.Errorf(geoerr)
+		return errors.New(geoerr)
 	}
 
 	w, errw := strconv.Atoi(geo[0])
 	h, errh := strconv.Atoi(geo[1])
 	if errw != nil || errh != nil {
-		return fmt.Errorf(geoerr)
+		return errors.New(geoerr)
 	}
 
 	conf.Width = w
@@ -181,25 +181,17 @@ func SanitiyCheck(conf *Config) error {
 
 	pos := strings.Split(conf.Posision, "x")
 	if len(geo) != 2 {
-		return fmt.Errorf(poserr)
+		return errors.New(poserr)
 	}
 
 	x, errx := strconv.Atoi(pos[0])
 	y, erry := strconv.Atoi(pos[1])
 	if errx != nil || erry != nil {
-		return fmt.Errorf(poserr)
+		return errors.New(poserr)
 	}
 
 	conf.X = x
 	conf.Y = y
 
 	return nil
-}
-
-func fileExists(filename string) bool {
-	info, err := os.Stat(filename)
-	if os.IsNotExist(err) {
-		return false
-	}
-	return !info.IsDir()
 }

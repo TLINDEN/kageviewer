@@ -46,7 +46,9 @@ func LoadImage(name string) (*ebiten.Image, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer fd.Close()
+	defer func() {
+		_ = fd.Close()
+	}()
 
 	img, _, err := image.Decode(fd)
 	if err != nil {
@@ -89,7 +91,7 @@ func (game *Game) Init() error {
 	game.Shader = shader
 
 	// user can customize TPS
-	ebiten.SetMaxTPS(game.Conf.TPS)
+	ebiten.SetTPS(game.Conf.TPS)
 
 	// setup shader bounds, by default we use window size
 	game.ShaderBounds = image.Rect(0, 0, game.Conf.Width, game.Conf.Height)
